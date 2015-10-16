@@ -40,7 +40,7 @@ public class WebTwainInterfaceService implements ScannerListener {
 																			+ "\n<html>"
 																			+ "\n	<head>"
 																			+ "\n		<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
-																			+ "\n		<title>MaelisWebDevice</title>"
+																			+ "\n		<title>WebTwain</title>"
 																			+ "\n	</head>"
 																			+ "\n	<body>"
 																			+ "\n		<p>Test des périphériques :"
@@ -58,7 +58,7 @@ public class WebTwainInterfaceService implements ScannerListener {
 																			+ "\n<html>"
 																			+ "\n	<head>"
 																			+ "\n		<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />"
-																			+ "\n		<title>MaelisWebDevice</title>"
+																			+ "\n		<title>WebTwain</title>"
 																			+ "\n	</head>"
 																			+ "\n	<body>";
 	
