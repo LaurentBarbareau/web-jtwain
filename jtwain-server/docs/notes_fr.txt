@@ -1,0 +1,49 @@
+
+Difficultés rencontrées :
+
+Le scanner utilisé pour les tests est un EPSON Perfection V370 Photo.
+
+Sous Windows Seven 64bits, il a fallu installer un gestionnaire de DataSource, matérialisé par le
+fichier TWAINDSM.dll version 32bits, le placer dans le répertoire C:\Windows\SysWOW64 (oui, c'est
+bien une DLL 32bits qu'il faut impérativement mettre dans un répertoire suffixé 64bits), puis 
+installer également un JRE 32bits. Ceci a été nécessaire car dans le répertoire C:\Windows, le 
+répertoire twain_32 était présent mais pas de twain_64. Donc, comme ce répertoire est a priori 
+consécutif à l'installation du driver du scanner et bien qu'ayant cru parvenir à installer un 
+driver 64bits issu du site d'EPSON, il s'est avéré que manifestement, ça n'a jamais été autre
+chose qu'un driver 32bits.
+
+En conséquence, même en étant sur un OS 64bits, dans le cas de ce modèle de scanner et selon
+le driver TWAIN fourni par EPSON, il faut que tout soit en version 32bits, en l'occurrence :
+
+	- le JRE
+
+	- le fichier jtwain.dll que l'on peut trouver ici
+		http://thorntonzone.com/manuals/Compression/Fax,%20IBM%20MMR/MMSC/mmsc/uk/co/mmscomputing/device/twain/win32/jtwain.dll
+	  ( Sinon en 64bits c'est ici
+		http://thorntonzone.com/manuals/Compression/Fax,%20IBM%20MMR/MMSC/mmsc/uk/co/mmscomputing/device/twain/win64/jtwain.dll )
+
+		Cf. http://thorntonzone.com/manuals/Compression/Fax,%20IBM%20MMR/MMSC/mmsc/uk/co/mmscomputing/device/twain/win32/
+		 et http://thorntonzone.com/manuals/Compression/Fax,%20IBM%20MMR/MMSC/mmsc/uk/co/mmscomputing/device/twain/win64/
+
+	- le fichier TWAINDSM.dll qui est disponible au sein du zip que l'on obtient ici 
+		http://downloads.sourceforge.net/project/twain-dsm/TWAIN%20DSM%202%20Windows%2032%2B64/twaindsm-2.3.0.win.bin.zip?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Ftwain-dsm%2F&ts=1445010413&use_mirror=netix
+		(en version 32 et 64 bits)
+
+Souhaitant "maveniser" le projet sous Eclipse, je me suis retrouvé dans un état un peu bancal qui
+m'a fait perdre du temps car ça ne buildait pas comme je le pensais... Il m'a fallu faire un peu
+de ménage pour que je ne confonde pas le répertoire /bin dans lequel Eclipse fait par défaut 
+ses builds avec le répertoire /target/classes de Maven...
+
+Pour que la DLL jtwain.dll soit prise en compte, il faut indiquer dans la configuration d'exécution
+l'argument de VM : -Djava.library.path=.
+Cet argument doit pointer sur le répertoire où se trouve la DLL. Donc, ayant placé celle-ci
+dans un repertoire resources référencé dans le buildpath, cela implique qu'après compilation
+Eclipse/Maven, elle se retrouve à la racine du répertoire de build : target/classes.
+La configuration d'exécution doit utiliser le répertoire de travail ${workspace_loc:jtwain-server/target/classes}
+si le chemin renseigné dans l'argument -Djava.library.path est '.' (répertoire courant).
+Il faut également s'assurer que la configuration de lancement désigne bien un JRE 32bits. 
+
+Sous Windows XP 32bits avec les scanners des imprimantes HP Color LaserJet Pro MFP M277dw 
+et HP Photosmart C4380 All-in-One Printer ça a fonctionné sans ces problèmes. Aucun TWAINDSM
+n'a été nécessaire... Soit il était déjà présent quelque part, soit ce fichier est seulement
+nécessaire en fonction du contexte...
